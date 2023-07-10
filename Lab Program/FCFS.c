@@ -90,7 +90,8 @@ void main()
     }
     fcfs(processes,n,burst_time,arrival_time);
 }
-/* output
+/* OUTPUT
+-----------------------------------------------------------------
     Enter the number of processes: 4
 Enter the arrival time for process 1:2
 Enter the Burst time for processes 1:1
