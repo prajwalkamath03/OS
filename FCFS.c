@@ -1,113 +1,92 @@
-#include&lt;stdio.h&gt;
-int main()
+#include<stdio.h>
+void printer(int processes[],int n,int burst_time[],int arrival_time[])
 {
-char pn[10];
-int
-arr[10],bur[10],star[10],finish[10],tat[1
-0],wt[10],i,n;
-int totwt=0,tottat=0;
-printf(&quot;Enter the number of
-processes:&quot;);
-scanf(&quot;%d&quot;,&amp;n);
-for(i=0;i&lt;n;i++)
+    int WT[n],TAT[n],total_WT=0,total_TAT=0,completion_time[n],idle=0,RT[n];
+    for (int i = 0; i < n; i++)//calculating times
+    {
+        if(i==0)
+        {
+            WT[0]=0;
+            completion_time[0]=burst_time[0]+arrival_time[0];
+            TAT[0]=completion_time[0]-arrival_time[0];
+            total_TAT=TAT[0];
+            RT[0]=0;
+            if(arrival_time[0]!=0)
+            {
+                idle=arrival_time[0];
+            }
+            continue;
+        }
+        if(completion_time[i-1]<arrival_time[i])
+        {
+            completion_time[i]=arrival_time[i]+burst_time[i];
+            idle+=(arrival_time[i]-completion_time[i-1]);
+            RT[i]=0;
+        }
+        else
+        {
+            completion_time[i]=completion_time[i-1]+burst_time[i];
+            RT[i]=completion_time[i-1]-arrival_time[i];
+        }
+        TAT[i]=completion_time[i]-arrival_time[i];
+        total_TAT+=TAT[i];
+        WT[i]=TAT[i]-burst_time[i];
+        total_WT+=WT[i];
+    }
+    printf("Processes\tAT\tBT\tWT\tTAT\tCT\tRT\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d\t\t%d\t%d\t%d\t%d\t%d\t%d\n",processes[i],arrival_time[i],burst_time[i],WT[i],TAT[i],completion_time[i],RT[i]);
+    }
+    printf("AVG waiting time: %2f\n",(float)total_WT/n);
+    printf("AVG turnaround time: %2f\n",(float)total_TAT/n);
+    printf("Total Idle time: %d\n",idle);
+    printf("\n");
+}
+void Sorter(int n,int processes[],int burst_time[],int arrival_time[])
 {
-printf(&quot;Enter the Process Name, Arrival
-Time &amp; Burst Time:&quot;);
+    for (int i = 0; i < n; i++)//sorting in priority
+    {
+        int first=i;
+        for (int j = i+1; j < n; j++)
+        {
+            if (arrival_time[j]<arrival_time[first])
+            {
+                first=j;
+            }
+        }
+        int temp=processes[i];
+        processes[i]=processes[first];
+        processes[first]=temp;
 
-scanf(&quot;%s%d%d&quot;,&amp;pn[i],&amp;arr[i],&amp;bur[i])
-;
-}
-for(i=0;i&lt;n;i++)
-{
-if(i==0)
-{
-star[i]=arr[i];
-wt[i]=star[i]-arr[i];
-finish[i]=star[i]+bur[i];
-tat[i]=finish[i]-arr[i];
-}
-else
-{
-star[i]=finish[i-1];
+        temp=burst_time[i];
+        burst_time[i]=burst_time[first];
+        burst_time[first]=temp;
 
-wt[i]=star[i]-arr[i];
-finish[i]=star[i]+bur[i];
-tat[i]=finish[i]-arr[i];
+        temp=arrival_time[i];
+        arrival_time[i]=arrival_time[first];
+        arrival_time[first]=temp;
+    }
 }
-}
-printf(&quot;\nPName Arrtime Burtime Start
-TAT Finish&quot;);
-for(i=0;i&lt;n;i++)
+void fcfs(int processes[],int n,int burst_time[],int arrival_time[])
 {
-printf(&quot;\n%s\t%6d\t\t%6d\t%6d\t%6d\
-t%6d&quot;,pn[i],arr[i],bur[i],star[i],tat[i],fini
-sh[i]);
-totwt+=wt[i];
-tottat+=tat[i];
+    Sorter(n,processes,burst_time,arrival_time);
+    printf("FCFS agorithm\n");
+    printer(processes,n,burst_time,arrival_time);
 }
-
-printf(&quot;\nAverage Waiting time:%f&quot;,
-(float)totwt/n);
-printf(&quot;\nAverage Turn Around
-Time:%f&quot;, (float)tottat/n);
-}
-
-SOURCE CODE:
-/* A program to simulate the SJF CPU
-scheduling algorithm */
-#include&lt;stdio.h&gt;
-#include&lt;string.h&gt;
-main()
+void main()
 {
-
-Int
-i=0,pno[10],bt[10],n,wt[10],temp=0,j,tt
-[10];
-float sum,at;
-printf(&quot;\n Enter the no of process &quot;);
-scanf(&quot; %d&quot;,&amp;n);
-printf(&quot;\n Enter the burst time of each
-process&quot;);
-for(i=0;i&lt;n;i++)
-{
-printf(&quot;\n p%d&quot;,i);
-scanf(&quot;%d&quot;,&amp;bt[i]);
-}
-for(i=0;i&lt;n-1;i++)
-{
-for(j=i+1;j&lt;n;j++)
-
-{
-if(bt[i]&gt;bt[j])
-{
-temp=bt[i];
-bt[i]=bt[j];
-bt[j]=temp;
-temp=pno[i];
-pno[i]=pno[j];
-pno[j]=temp;
-}
-}
-}
-wt[0]=0;
-for(i=1;i&lt;n;i++)
-{
-
-wt[i]=bt[i-1]+wt[i-1];
-sum=sum+wt[i];
-}
-printf(&quot;\n process no \t burst time\t
-waiting time \t turn around time\n&quot;);
-for(i=0;i&lt;n;i++)
-{
-tt[i]=bt[i]+wt[i];
-at+=tt[i];
-printf(&quot;\n
-p%d\t\t%d\t\t%d\t\t%d&quot;,i,bt[i],wt[i],tt[
-i]);
-}
-printf(&quot;\n\n\t Average waiting
-time%f\n\t Average turn around
-time%f&quot;, sum/n,at/n);
-
+    int n=0;
+    printf("Enter the number of processes: ");
+    scanf("%d",&n);
+    int processes[n],burst_time[n],arrival_time[n];
+    for (int i = 0; i < n; i++)
+    {
+        printf("Enter the arrival time for process %d:",i+1);
+        scanf("%d",&arrival_time[i]);
+        printf("Enter the Burst time for processes %d:",i+1);
+        scanf("%d",&burst_time[i]);
+        processes[i]=i+1;
+    }
+    fcfs(processes,n,burst_time,arrival_time);
 }
