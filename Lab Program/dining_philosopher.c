@@ -6,10 +6,8 @@
 #define NUM_CHOPSTICKS 5
 
 void dine(int n);
-pthread_t
-philosopher[NUM_PHILOSOPHERS];
-pthread_mutex_t
-chopstick[NUM_CHOPSTICKS];
+pthread_t philosopher[NUM_PHILOSOPHERS];
+pthread_mutex_t chopstick[NUM_CHOPSTICKS];
 
 int main()
 {
@@ -18,8 +16,7 @@ int main()
 
     for(i=1;i<=NUM_CHOPSTICKS;i++)
     {
-        status_message=
-        pthread_mutex_init(&chopstick[i],NULL);
+        status_message=pthread_mutex_init(&chopstick[i],NULL);
         if(status_message==-1)
         {
             printf("\n Mutex initialization failed");
@@ -28,8 +25,7 @@ int main()
     }
     for(i=1;i<=NUM_PHILOSOPHERS;i++)
     {
-        status_message=
-        pthread_create(&philosopher[i],NULL,(void*)dine,(int*)i);
+        status_message=pthread_create(&philosopher[i],NULL,(void*)dine,(int*)i);
         if(status_message!=0)
         {
             printf("\n Thread creation error\n");
@@ -39,8 +35,7 @@ int main()
     }
     for(i=1;i<=NUM_PHILOSOPHERS;i++)
     {
-        status_message=
-        pthread_join(philosopher[i],&msg);
+        status_message=pthread_join(philosopher[i],&msg);
         if(status_message!=0)
         {
             printf("\n Thread join failed\n");
@@ -50,8 +45,7 @@ int main()
     }
      for(i=1;i<=NUM_CHOPSTICKS;i++)
      {
-        status_message=
-        pthread_mutex_destroy(&chopstick[i]);
+        status_message=pthread_mutex_destroy(&chopstick[i]);
         if(status_message!=0)
         {
             printf("\n Mutex Destroyed\n");
