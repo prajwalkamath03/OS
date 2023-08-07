@@ -22,7 +22,7 @@ void main()
     printf("\nTotal head movement = %d\n",mov);
 }
 
-/*
+/**
   OUTPUT:
   Enter the current position: 45
 Enter the no of requests: 5
