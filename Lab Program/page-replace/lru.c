@@ -61,7 +61,7 @@ int main() {
 
 /* 
 OUTPUT:
-page     Frame1 Frame2  Frame3
+page         Frame1                  Frame2                  Frame3
 1:              1
 2:              1                       2
 3:              1                       2                       3
